@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html
+  xmlns="http://www.w3.org/1999/xhtml"
+  lang="$lang$"
+  xml:lang="$lang$"
+  $if(dir)$
+  dir="$dir$"
+  $endif$
+>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="generator" content="pandoc" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <link href="https://www.etsi.org/templates/etsi/favicon.ico" rel="shortcut icon" />
+    $for(author-meta)$
+    <meta name="author" content="$author-meta$" />
+    $endfor$ $if(date-meta)$
+    <meta name="dcterms.date" content="$date-meta$" />
+    $endif$ $if(keywords)$
+    <meta name="keywords" content="$for(keywords)$$keywords$$sep$, $endfor$" />
+    $endif$ $if(description-meta)$
+    <meta name="description" content="$description-meta$" />
+    $endif$
+    <title>$if(title-prefix)$$title-prefix$ – $endif$$pagetitle$</title>
+    <style>
+      $styles.html()$
+    </style>
+    $for(css)$
+    <link rel="stylesheet" href="../$css$" />
+    $endfor$ $for(header-includes)$ $header-includes$ $endfor$ $if(math)$
+    $if(mathjax)$
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    $endif$ $math$ $endif$
+    <script src="dist/bundle.js" defer></script>
+    <!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <button
+      style="position: fixed; bottom: 10px; right: 10px"
+      onclick="toggleStyles()"
+    >
+      Toggle Background highlighting
+    </button>
+    <button
+      style="position: fixed; bottom: 50px; right: 10px"
+      id="download_btn"
+    >
+      Download HTML
+    </button>
+    <label class="switch"
+      >Editing
+      <input type="checkbox" id="editing" />
+      <span class="slider round"></span>
+    </label>
+    <style>
+      /* The switch - the box around the slider */
+      .switch {
+        position: fixed;
+        bottom: 90px;
+        right: 10px;
+        display: inline-block;
+        width: 120px;
+        height: 34px;
+      }
+
+      /* Hide default HTML checkbox */
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      /* The slider */
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 60px;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        -webkit-transition: 0.4s;
+        transition: 0.4s;
+      }
+
+      input:checked + .slider {
+        background-color: #2196f3;
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196f3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
+    </style>
+
+    <script>
+      let styleToggle = false;
+
+      function toggleStyles() {
+        const links = document.getElementsByTagName("link"); // link[0] should be styiling.css
+        if (links[1].getAttribute("rel") === "stylesheet") {
+          if (styleToggle) {
+            links[1].href = "API.css";
+          } else {
+            links[1].href = "background_highlight.css";
+          }
+        }
+        styleToggle = !styleToggle;
+      }
+    </script>
+
+    $for(include-before)$ $include-before$ $endfor$ $if(title)$
+    <header id="title-block-header">
+      <h1 class="title">$title$</h1>
+      $if(subtitle)$
+      <p class="subtitle">$subtitle$</p>
+      $endif$ $for(author)$
+      <p class="author">$author$</p>
+      $endfor$ $if(date)$
+      <p class="date">$date$</p>
+      $endif$ $if(abstract)$
+      <div class="abstract">
+        <div class="abstract-title">$abstract-title$</div>
+        $abstract$
+      </div>
+      $endif$
+    </header>
+    $endif$
+    <flex
+      class="h"
+      style="position: fixed; top: 0; left: 0; right: 0; bottom: 0"
+    >
+      <flex-item style="flex: 1">
+        <nav id="$idprefix$TOC" role="doc-toc">
+          $if(toc-title)$
+          <h2 id="$idprefix$toc-title">$toc-title$</h2>
+          $endif$
+          <ul>
+            <li>
+              <h1><a href="0--1.html">ETSI title</a></h1>
+            </li>
+          </ul>
+          $table-of-contents$
+        </nav>
+      </flex-item>
+      <flex-resizer style="cursor: col-resize"></flex-resizer
+      ><flex-item style="flex: 5">
+        <div id="editor">
+          $body$ $for(include-after)$ $include-after$ $endfor$
+        </div>
+      </flex-item>
+    </flex>
+    <script>
+      /* BORROWED FROM HERE: https://stackoverflow.com/questions/28767221/flexbox-resizing */
+      function manageResize(md, sizeProp, posProp) {
+        var r = md.target;
+
+        var prev = r.previousElementSibling;
+        var next = r.nextElementSibling;
+        if (!prev || !next) {
+          return;
+        }
+
+        md.preventDefault();
+
+        var prevSize = prev[sizeProp];
+        var nextSize = next[sizeProp];
+        var sumSize = prevSize + nextSize;
+        var prevGrow = Number(prev.style.flexGrow);
+        var nextGrow = Number(next.style.flexGrow);
+        var sumGrow = prevGrow + nextGrow;
+        var lastPos = md[posProp];
+
+        function onMouseMove(mm) {
+          var pos = mm[posProp];
+          var d = pos - lastPos;
+          prevSize += d;
+          nextSize -= d;
+          if (prevSize < 0) {
+            nextSize += prevSize;
+            pos -= prevSize;
+            prevSize = 0;
+          }
+          if (nextSize < 0) {
+            prevSize += nextSize;
+            pos += nextSize;
+            nextSize = 0;
+          }
+
+          var prevGrowNew = sumGrow * (prevSize / sumSize);
+          var nextGrowNew = sumGrow * (nextSize / sumSize);
+
+          prev.style.flexGrow = prevGrowNew;
+          next.style.flexGrow = nextGrowNew;
+
+          lastPos = pos;
+        }
+
+        function onMouseUp(mu) {
+          // Change cursor to signal a state's change: stop resizing.
+          const html = document.querySelector("html");
+          html.style.cursor = "default";
+
+          if (posProp === "pageX") {
+            r.style.cursor = "ew-resize";
+          } else {
+            r.style.cursor = "ns-resize";
+          }
+
+          window.removeEventListener("mousemove", onMouseMove);
+          window.removeEventListener("mouseup", onMouseUp);
+        }
+
+        window.addEventListener("mousemove", onMouseMove);
+        window.addEventListener("mouseup", onMouseUp);
+      }
+
+      function setupResizerEvents() {
+        document.body.addEventListener("mousedown", function (md) {
+          // Used to avoid cursor's flickering
+          const html = document.querySelector("html");
+
+          var target = md.target;
+          if (target.nodeType !== 1 || target.tagName !== "FLEX-RESIZER") {
+            return;
+          }
+          var parent = target.parentNode;
+          var h = parent.classList.contains("h");
+          var v = parent.classList.contains("v");
+          if (h && v) {
+            return;
+          } else if (h) {
+            // Change cursor to signal a state's change: begin resizing on H.
+            target.style.cursor = "col-resize";
+            html.style.cursor = "col-resize"; // avoid cursor's flickering
+
+            // use offsetWidth versus scrollWidth (and clientWidth) to avoid splitter's jump on resize when a flex-item content overflow (overflow: auto).
+            manageResize(md, "offsetWidth", "pageX");
+          } else if (v) {
+            // Change cursor to signal a state's change: begin resizing on V.
+            target.style.cursor = "row-resize";
+            html.style.cursor = "row-resize"; // avoid cursor's flickering
+
+            manageResize(md, "offsetHeight", "pageY");
+          }
+        });
+      }
+
+      setupResizerEvents();
+    </script>
+    <script src="./advancedTOCLogic.js" defer></script>
+  </body>
+</html>

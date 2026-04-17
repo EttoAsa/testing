@@ -1,0 +1,8 @@
+python-docx
+beautifulsoup4
+cssutils
+Pillow
+lxml
+docxcompose
+GitPython
+diff-match-patch
