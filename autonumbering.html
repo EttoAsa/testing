@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+
+<html lang="" xml:lang="" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8"/>
+<meta content="pandoc" name="generator"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=yes" name="viewport"/>
+<title>MD autonumbering</title>
+<style>
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      div.columns{display: flex; gap: min(4vw, 1.5em);}
+      div.column{flex: auto; overflow-x: auto;}
+      div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+      /* The extra [class] is a hack that increases specificity enough to
+         override a similar rule in reveal.js */
+      ul.task-list[class]{list-style: none;}
+      ul.task-list li input[type="checkbox"] {
+        font-size: inherit;
+        width: 0.8em;
+        margin: 0 0.8em 0.2em -1.6em;
+        vertical-align: middle;
+      }
+      .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    </style>
+<link href="../customCSS.css" rel="stylesheet"/>
+<link href="../ETSIStyles.css" rel="stylesheet"/>
+<!--[if lt IE 9]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+    <![endif]-->
+<script>
+      const links = document.getElementsByTagName("link"); // link[0] should be styiling.css
+      if (links[1].getAttribute("rel") === "stylesheet") {
+        if (styleToggle) {
+          links[1].href = "API.css";
+        } else {
+          links[1].href = "background_highlight.css";
+        }
+      }
+    </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      padding-bottom: 4rem;
+      max-width: unset !important;
+      left: 0 !important;
+    }
+    .example-container {
+      display: flex;
+      gap: 20px; /* Space between the two divs */
+    }
+    .example-container > div {
+      flex: 1; /* Each div takes up equal space */
+      border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+      padding: 10px; /* Optional: Add some padding inside the divs */
+      box-sizing: border-box; /* Ensure padding and border are included in the width */
+    }
+  </style>
+</head>
+<body>
+  <h2>Headings</h2>
+  <p>
+    Headings are automatically numbered when the leading clause/annex number is missing. This is done for both clauses and annexes.<br><br>
+
+    The top level number is determined by the order of files in the document. For instance, if the file is the fourth, it is going to be numbered 4. If the file is an annex, it is going to be numbered D (the fourth letter of the alphabet).<br><br>
+
+    <i>NOTE: Whether a file is a clause or an annex is by default determined by the name of the file (it must start with "clause-" or "annex-"). If you use a custom file order logic, it depends on the fact that the provided file is part of the clauses files or the annexes files.</i><br><br>
+
+    The next example shows how it works for a file that is the fourth (called clause-4.md here) in the document.
+  </p>
+  <div class="example-container">
+    <div>
+      # Heading<br/><br/>
+      ## Heading<br/><br/>
+      ### Heading<br/><br/>
+      #### Heading<br/><br/>
+      ## Heading<br/><br/>
+      ### Heading<br/><br/>
+      ## Heading<br/><br/>
+      ## Heading<br/><br/>
+      ### Heading<br/><br/>
+    </div>
+    <div>
+      <h1>4 Heading</h1>
+      <h2>4.1 Heading</h2>
+      <h3>4.1.1 Heading</h3>
+      <h4>4.1.1.1 Heading</h4>
+      <h2>4.2 Heading</h2>
+      <h3>4.2.1 Heading</h3>
+      <h2>4.3 Heading</h2>
+      <h2>4.4 Heading</h2>
+      <h3>4.4.1 Heading</h3>
+    </div>
+  </div>  
+  <p>
+    The next example shows how it works for a file that is the fourth annex (called annex-d.md here) in the document. In this case the "Annex:" prefix is required in the top level heading. The part that needs to be omitted is the letter. This also works if you have a parentesys like "Annex (informative):"
+  </p>
+  <div class="example-container">
+    <div>
+      # Annex: Heading<br/><br/>
+      ## Heading<br/><br/>
+      ### Heading<br/><br/>
+      #### Heading<br/><br/>
+      ## Heading<br/><br/>
+      ### Heading<br/><br/>
+      ## Heading<br/><br/>
+      ## Heading<br/><br/>
+      ### Heading<br/><br/>
+    </div>
+    <div>
+      <h1>Annex D: Heading</h1>
+      <h2>D.1 Heading</h2>
+      <h3>D.1.1 Heading</h3>
+      <h4>D.1.1.1 Heading</h4>
+      <h2>D.2 Heading</h2>
+      <h3>D.2.1 Heading</h3>
+      <h2>D.3 Heading</h2>
+      <h2>D.4 Heading</h2>
+      <h3>D.4.1 Heading</h3>
+    </div>
+  </div>
+
+  <h2>Examples</h2>
+  <p>
+    EXAMPLES are automatically numbered when the "EXAMPLE:" text is missing.<br><br>
+
+    The numbering is per clause/annex. So it resets in-between clauses/annexes.<br><br>
+
+    When there is one example in a clause/annex, it is numbered "EXAMPLE:". When there are multiple examples, they are numbered "EXAMPLE 1:", "EXAMPLE 2:", etc.<br><br>
+  </p>
+  <div class="example-container">
+
+    <div>
+      ## Heading<br/><br/>
+      >>> [!tip]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>><br><br>
+
+      ## Heading<br/><br/>
+      >>> [!tip]<br/>
+      <br>
+      Some text<br>
+      <br>
+      >>><br>
+      <br>
+      >>> [!tip]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>>
+    </div>
+    <div>
+      <h2>4.1 Heading</h2>
+      <div class="EX"><div><p>EXAMPLE:</p></div><div>
+      <p>Some text.</p>
+      </div></div>
+      <h2>4.2 Heading</h2>
+      <div class="EX"><div><p>EXAMPLE 1:</p></div><div>
+      <p>Some text</p>
+      </div></div>
+      <div class="EX"><div><p>EXAMPLE 2:</p></div><div>
+      <p>Some text.</p>
+      </div>
+    </div>
+    </div></div>
+    </div>
+
+  <h2>Notes</h2>
+  <p>
+    NOTES are automatically numbered when the "NOTE:" text is missing.<br><br>
+
+    The numbering is per clause/annex. So it resets in-between clauses/annexes.<br><br>
+
+    When there is one note in a clause/annex, it is numbered "NOTE:". When there are multiple notes, they are numbered "NOTE 1:", "NOTE 2:", etc.<br><br>
+  </p>
+  <div class="example-container">
+    <div>
+      ## Heading<br/><br/>
+      >>> [!note]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>><br><br>
+
+      ## Heading<br/><br/>
+      >>> [!note]<br/>
+      <br>
+      Some text<br>
+      <br>
+      >>><br>
+
+      <br>
+      >>> [!note]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>>
+    </div>
+    <div>
+      <h2>4.1 Heading</h2>
+      <div class="NO"><div><p>NOTE:</p></div><div>
+      <p>Some text.</p>
+      </div></div>
+      <h2>4.2 Heading</h2>
+      <div class="NO"><div><p>NOTE 1:</p></div><div>
+      <p>Some text</p>
+      </div></div>
+      <div class="NO"><div><p>NOTE 2:</p></div><div>
+      <p>Some text.</p>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <h2>Mixing Examples and Notes</h2>
+  <p>
+    When mixing examples and notes, the same numbering rules apply. Each example and note will be numbered according to its position within the clause/annex, but they don't share numbering.
+  </p>
+
+  <div class="example-container">
+    <div>
+      ## Heading<br/><br/>
+      >>> [!tip]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>><br><br>
+
+      >>> [!note]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>><br><br>
+
+      >>> [!tip]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>><br><br>
+
+      ## Heading<br/><br/>
+
+      >>> [!note]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>><br><br>
+
+      >>> [!tip]<br/>
+      <br>
+      Some text.<br>
+      <br>
+      >>>
+    </div>
+    <div>
+      <h2>4.1 Heading</h2>
+      <div class="EX"><div><p>EXAMPLE 1:</p></div><div>
+      <p>Some text.</p>
+      </div></div>
+      <div class="NO"><div><p>NOTE:</p></div><div>
+      <p>Some text.</p>
+      </div></div>
+      <div class="EX"><div><p>EXAMPLE 2:</p></div><div>
+      <p>Some text.</p>
+      </div></div>
+      <h2>4.2 Heading</h2>
+      <div class="NO"><div><p>NOTE:</p></div><div>
+      <p>Some text.</p>
+      </div></div>
+      <div class="EX"><div><p>EXAMPLE:</p></div><div>
+      <p>Some text.</p>
+      </div></div>
+    </div>
+  </div>
+
+  <h2>Notes in tables</h2>
+  <p>
+    Notes inside tables are also automatically numbered when the "NOTE:" text is missing.<br><br>
+
+    The numbering is per table. So it resets in-between tables.<br><br>
+
+    When there is one note in a table, it is numbered "NOTE:". When there are multiple notes, they are numbered "NOTE 1:", "NOTE 2:", etc.<br><br>
+
+    <b>Please note that it only works when the note is in a cell that spans over all columns, so it won't work if the note is in a regular cell.</b><br><br>
+  </p>
+    <div class="example-container">
+    <div>
+    **Table 4.3.5-2: Main implementation configurations**<br/>
+<br/>
+    &lt!-- prettier-ignore-start --&gt<br/>
+    +-------------------+-----------------------------------------+----------------------------------------+<br/>
+    | Description&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    | Temporal API&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    | RegistryAPI&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+    +===========+=======================+=======================+<br/>
+    | Central&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    | none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    | none&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+    +-------------------+-----------------------------------------+----------------------------------------+<br/>
+    | >>> [!note]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+    | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
+    | Some text.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+    | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
+    | >>> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+    | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
+    | >>> [!note]&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+    | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
+    | Some text.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+    | &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |<br>
+    | >>> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;|<br/>
+    +-------------------------------------------------------------------------------------------------------+<br/>
+    &lt!-- prettier-ignore-end --&gt
+    </div>
+    <div>
+<div class="TH" id="Table_4.3.5-2">
+<p>Table 4.3.5‑2: Main implementation configurations</p>
+</div>
+<table style="width:99%;">
+<colgroup>
+<col style="width: 73%"/>
+<col style="width: 13%"/>
+<col style="width: 13%"/>
+</colgroup>
+<thead>
+<tr>
+<th><div class="TAH">
+Description
+</div></th>
+<th><div class="TAH">
+Temporal API
+</div></th>
+<th><div class="TAH">
+RegistryAPI
+</div></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><div class="TAL">
+Central
+</div></td>
+<td><div class="TAL">
+none
+</div></td>
+<td><div class="TAL">
+none
+</div></td>
+</tr>
+<tr>
+<td colspan="3"><div class="NO"><div><p>NOTE 1:</p></div><div>
+<p>Some text.</p>
+</div></div>
+<div class="NO"><div><p>NOTE 2:</p></div><div>
+<p>Some text.</p>
+</div></div>
+</td>
+</tr>
+</tbody>
+</table>
+    </div>
+  </div>
+
+  <h2>Figure captions</h2>
+  <p>
+    FIGURES are automatically numbered when the "Figure x.y-z:" text is missing.<br><br>
+
+    The numbering is per clause/annex. So it resets in-between clauses/annexes.<br><br>
+
+    <b>Please note that autonumbering of figure captions doesn't work within tables. This DOES NOT prevent you to provide a hardcoded number which can be later referenced.</b>
+  </p>
+  <div class="example-container">
+    <div>
+      ## Heading<br/><br/>
+      ![](media/image2.png)<br/>
+      <br/>
+      **Figure: Entity**<br/>
+
+      ## Heading<br/><br/>
+      ![](media/image2.png)<br/>
+      <br/>
+      **Figure: Attributes**<br/>
+      ![](media/image2.png)<br/>
+      <br/>
+      **Figure: Property name**<br/>
+    </div>
+    <div>
+      <h2>4.1 Heading</h2>
+      <div class="FL" id="Figure_4.1-1">
+      <p><img src="media/image4.png"/></p>
+      </div>
+      <div class="TF" id>
+      <p>Figure 4.1-1: Entity</p>
+      </div>
+      <h2>4.2 Heading</h2>
+      <div class="FL" id="Figure_4.2-1">
+      <p><img src="media/image5.png"/></p>
+      </div>
+      <div class="TF" id>
+      <p>Figure 4.2-1: Attributes</p>
+      </div>
+      <div class="FL" id="Figure_4.2-2">
+      <p><img src="media/image6.png"/></p>
+      </div>
+      <div class="TF" id>
+      <p>Figure 4.2-2: Property name</p>
+      </div>
+    </div>
+  </div>
+
+  <h2>Table captions</h2>
+
+  <p>
+    TABLES are automatically numbered when the "Table x.y-z:" text is missing.<br><br>
+
+    The numbering is per clause/annex. So it resets in-between clauses/annexes.<br><br>
+
+    <b>Please note that autonumbering of table captions doesn't work within tables, but this is not expected as we are not allowed to put tables within tables in ETSI documents.</b>
+
+  </p>
+  <div class="example-container">
+    <div>
+      ## Heading<br/><br/>
+      **Table: First global table caption**<br/>
+<br/>
+      ## Heading<br/><br/>
+      **Table: Second global table caption**<br/>
+      **Table: Third global table caption**<br/>
+    </div>
+    <div>
+      <h2>4.1 Heading</h2>
+      <div class="TH" id="Table_4.1-1">
+      <p>Table 4.1-1: First global table caption</p>
+      </div>
+      <h2>4.2 Heading</h2>
+      <div class="TH" id="Table_4.2-1">
+      <p>Table 4.2-1: Second global table caption</p>
+      </div>
+      <div class="TH" id="Table_4.2-2">
+      <p>Table 4.2-2: Third global table caption</p>  
+      </div>
+</body>
+</html>
+
+
